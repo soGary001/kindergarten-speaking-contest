@@ -1,6 +1,9 @@
 import logging
+import sys
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from backend.mimo_client import transcribe_wav
@@ -28,3 +31,10 @@ async def transcribe(req: TranscribeRequest) -> dict:
         logger.exception("transcribe failed")
         return {"text": ""}
     return {"text": text}
+
+
+if hasattr(sys, "_MEIPASS"):
+    _FRONTEND = Path(sys._MEIPASS) / "frontend"
+else:
+    _FRONTEND = Path(__file__).resolve().parent.parent / "frontend"
+app.mount("/", StaticFiles(directory=str(_FRONTEND), html=True), name="frontend")
