@@ -1,0 +1,8 @@
+.superpowers/
+__pycache__/
+*.pyc
+build/dist/
+dist/
+*.spec
+.venv/
+backend/config_local.py
