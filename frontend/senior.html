@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中班 Middle</title>
+  <link rel="stylesheet" href="/css/memphis.css" />
+</head>
+<body>
+  <a class="hint" href="/index.html">← 返回</a>
+
+  <!-- 选字母态 -->
+  <div id="pick" class="scene">
+    <h1 class="title" style="font-size:44px">点一个字母开始 ✨</h1>
+    <div id="grid" class="letter-grid"></div>
+  </div>
+
+  <!-- 进行中态 -->
+  <div id="play" class="scene hidden">
+    <div id="timer" class="timer">60</div>
+    <div id="letter" class="big-letter">S</div>
+    <div id="prompt" class="prompt">说一个 S 开头的单词，再用它说一句话 🎤</div>
+    <div id="word" class="bubbles"></div>
+    <div id="sentence" class="sentence"></div>
+  </div>
+
+  <script src="/js/recorder.js"></script>
+  <script src="/js/senior.js"></script>
+</body>
+</html>
