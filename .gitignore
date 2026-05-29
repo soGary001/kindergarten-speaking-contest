@@ -2,6 +2,7 @@
 __pycache__/
 *.pyc
 build/dist/
+build/SpeakingStar/
 dist/
 *.spec
 .venv/
