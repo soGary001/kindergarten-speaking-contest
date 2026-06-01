@@ -10,3 +10,9 @@ backend/config_local.py
 *.wav
 .claude/launch.json
 .DS_Store
+# Android / Capacitor（生成物，不入库）
+node_modules/
+android/
+.gradle/
+*.apk
+dist-windows/

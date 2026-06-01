@@ -1,0 +1,13 @@
+{
+  "name": "speakingstar",
+  "version": "1.0.0",
+  "private": true,
+  "description": "国际幼儿园英语口语比赛 —— Android(Capacitor) 打包配置",
+  "devDependencies": {
+    "@capacitor/cli": "^6.1.2"
+  },
+  "dependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/core": "^6.1.2"
+  }
+}

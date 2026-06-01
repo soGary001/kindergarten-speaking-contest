@@ -19,13 +19,8 @@ class SpeechEngine {
 
   async _transcribe(b64, letter) {
     try {
-      const resp = await fetch("/api/transcribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ audio: b64, letter }),
-      });
-      const data = await resp.json();
-      if (data.text) this.onText(data.text, letter, true);
+      const text = await transcribeAudio(b64, letter); // asr.js：Android 直连阿里云 / 桌面走后端
+      if (text) this.onText(text, letter, true);
     } catch (_) { /* 静默跳过，不阻塞倒计时 */ }
   }
 
