@@ -7,60 +7,184 @@
 html, body { height: 100%; margin: 0; }
 body {
   font-family: "Comic Sans MS", "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
-  background: var(--bg); color: var(--ink); overflow: hidden;
+  color: var(--ink); overflow: hidden;
+  background: linear-gradient(125deg, #eaf6ff, #ffe9f3, #eafff6, #fff7e0);
+  background-size: 320% 320%;
+  animation: bg-shift 18s ease-in-out infinite;
+}
+@keyframes bg-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }
 .scene { position: fixed; inset: 0; display: flex; flex-direction: column;
   align-items: center; justify-content: center; text-align: center; }
-.shape { position: absolute; z-index: 0; }
+
+/* 背景漂浮装饰（由 celebrate.js 注入） */
+.decor-layer { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.decor { position: absolute; opacity: .55; animation: drift ease-in-out infinite; }
+.decor-circle { border-radius: 50%; }
+.decor-ring { border-radius: 50%; background: transparent !important; border: 8px solid var(--pink); }
+.decor-tri { width: 0 !important; height: 0 !important; background: transparent !important;
+  border-left: 30px solid transparent; border-right: 30px solid transparent; }
+@keyframes drift {
+  0%   { transform: translateY(0) rotate(0deg); }
+  50%  { transform: translateY(-30px) rotate(28deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+/* 旧版静态形状（页面内联用）也漂起来 */
+.shape { position: absolute; z-index: 0; animation: drift 7s ease-in-out infinite; }
 .circle { border-radius: 50%; }
 .tri { width: 0; height: 0; background: transparent !important; }
+
 h1.title { font-size: 64px; font-weight: 900; z-index: 2;
-  text-shadow: 4px 4px 0 var(--yellow); margin: 0 0 40px; }
-.btn-row { display: flex; gap: 32px; z-index: 2; }
+  text-shadow: 4px 4px 0 var(--yellow); margin: 0 0 40px;
+  animation: title-bounce 2.6s ease-in-out infinite; }
+@keyframes title-bounce {
+  0%,100% { transform: scale(1) rotate(-2deg); }
+  50% { transform: scale(1.05) rotate(2deg); }
+}
+
+.btn-row { display: flex; gap: 32px; z-index: 2; flex-wrap: wrap; justify-content: center; }
 .big-btn { border: none; cursor: pointer; padding: 36px 56px; border-radius: 28px;
   font-size: 36px; font-weight: 900; color: var(--ink);
-  box-shadow: 6px 7px 0 rgba(0,0,0,.18); transition: transform .1s; }
-.big-btn:active { transform: translateY(3px); }
+  box-shadow: 6px 7px 0 rgba(0,0,0,.18); transition: transform .15s ease; }
+.big-btn:hover { transform: translateY(-5px) scale(1.06) rotate(-1.5deg); }
+.big-btn:active { transform: translateY(3px) scale(.98); }
 .btn-junior { background: var(--yellow); }
 .btn-senior { background: var(--green); }
+.btn-again { background: var(--pink); }
+.btn-home { background: var(--purple); }
 
-/* 大字母 */
-.big-letter { font-size: 200px; font-weight: 900; color: var(--rose);
-  text-shadow: 6px 6px 0 var(--yellow); z-index: 2; }
+/* 大字母：呼吸 + 摇摆 */
+.big-letter { font-size: 210px; font-weight: 900; color: var(--rose);
+  text-shadow: 7px 7px 0 var(--yellow); z-index: 2;
+  animation: letter-bounce 2.2s ease-in-out infinite; }
+@keyframes letter-bounce {
+  0%,100% { transform: scale(1) rotate(-3deg); }
+  50% { transform: scale(1.08) rotate(3deg); }
+}
 .prompt { font-size: 32px; font-weight: 800; color: var(--blue); z-index: 2; margin-top: 8px; }
 
-/* 倒计时圆环 */
-.timer { position: fixed; top: 28px; right: 28px; width: 96px; height: 96px;
-  border-radius: 50%; border: 10px solid var(--green); background: #fff;
+/* 倒计时圆环：又大又可爱 */
+.timer { position: fixed; top: 22px; right: 24px; width: 148px; height: 148px;
+  border-radius: 50%; border: 14px solid var(--green); background: #fff;
   display: flex; align-items: center; justify-content: center;
-  font-size: 40px; font-weight: 900; color: var(--ink); z-index: 5; }
-.timer.warn { border-color: var(--rose); }
+  font-size: 76px; font-weight: 900; color: var(--ink); z-index: 5;
+  box-shadow: 6px 7px 0 rgba(0,0,0,.18), inset 0 0 0 6px #eafff6;
+  animation: timer-breathe 2s ease-in-out infinite; }
+@keyframes timer-breathe {
+  0%,100% { transform: scale(1) rotate(-1.5deg); }
+  50% { transform: scale(1.05) rotate(1.5deg); }
+}
+.timer.warn { border-color: var(--rose); color: var(--rose);
+  box-shadow: 6px 7px 0 rgba(0,0,0,.18), inset 0 0 0 6px #ffe9f0;
+  animation: timer-pulse .55s ease-in-out infinite; }
+@keyframes timer-pulse {
+  0%,100% { transform: scale(1); }
+  50% { transform: scale(1.16); }
+}
 
 /* 气泡糖单词 */
 .bubbles { position: fixed; left: 24px; right: 24px; bottom: 40px;
   display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; z-index: 3; }
-.bub { padding: 18px 32px; border-radius: 32px; font-size: 38px; font-weight: 900;
+.bub { padding: 18px 32px; border-radius: 32px; font-size: 40px; font-weight: 900;
   color: var(--ink); background: #fff; box-shadow: 5px 6px 0 rgba(0,0,0,.18);
-  animation: pop .45s ease-out both; }
-.bub.ok { background: var(--green); color: #053; }
-.bub .star { font-size: 26px; vertical-align: super; }
-@keyframes pop { 0% { transform: scale(.4) rotate(-8deg); opacity: 0; }
-  70% { transform: scale(1.12); } 100% { transform: scale(1); opacity: 1; } }
+  animation: pop .55s cubic-bezier(.18,1.5,.4,1) both; }
+/* 没对上的词：可爱的白色斜气泡（仍然展示，无负面感） */
+.bub:not(.ok) { border: 4px dashed var(--purple); transform: rotate(var(--r, -3deg)); }
+/* 对上的词：发光绿气泡 + 持续轻摆 */
+.bub.ok { background: var(--green); color: #053; border: 4px solid #fff;
+  box-shadow: 0 0 0 6px rgba(6,214,160,.35), 5px 6px 0 rgba(0,0,0,.18);
+  animation: pop .55s cubic-bezier(.18,1.5,.4,1) both, wiggle 1.6s .55s ease-in-out infinite; }
+.bub .star { font-size: 28px; vertical-align: super;
+  display: inline-block; animation: star-pop 1.2s ease-in-out infinite; }
+@keyframes pop {
+  0% { transform: scale(.3) rotate(-12deg); opacity: 0; }
+  60% { transform: scale(1.2) rotate(var(--r, 0deg)); }
+  100% { transform: scale(1) rotate(var(--r, 0deg)); opacity: 1; }
+}
+@keyframes wiggle {
+  0%,100% { transform: rotate(-3deg) scale(1); }
+  50% { transform: rotate(3deg) scale(1.04); }
+}
+@keyframes star-pop {
+  0%,100% { transform: scale(1) rotate(0); }
+  50% { transform: scale(1.4) rotate(18deg); }
+}
 
-/* 中班句子 */
-.sentence { position: fixed; left: 32px; right: 32px; bottom: 56px;
-  font-size: 40px; font-weight: 800; line-height: 1.3; text-align: center; z-index: 3;
-  animation: pop .5s ease-out both; }
-.sentence b { color: var(--rose); background: var(--yellow);
-  padding: 2px 12px; border-radius: 14px; }
+/* 中班进行中：从上往下的纵向布局，避免单词与句子重叠 */
+#play { position: fixed; inset: 0; display: flex; flex-direction: column;
+  align-items: center; padding: 14px 24px 22px; }
+#play .big-letter { font-size: 130px; }
+#play .prompt { margin-top: 0; }
+
+/* 中班“单词 + 句子”条目列表（可滚动） */
+.entries { margin-top: 8px; width: min(94vw, 1120px); flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+  align-items: center; padding: 6px 0; z-index: 3; }
+.entry { display: flex; align-items: center; justify-content: center;
+  gap: 18px; flex-wrap: wrap; width: 100%; }
+.entry .bub { font-size: 42px; }
+.entry-sentence { font-size: 40px; font-weight: 800; color: var(--ink); line-height: 1.25;
+  text-align: center; }
+.entry-sentence:empty { display: none; }
+.entry-sentence b { color: var(--rose); background: var(--yellow);
+  padding: 2px 12px; border-radius: 14px; display: inline-block;
+  animation: wiggle 1.4s ease-in-out infinite; }
 
 /* 中班首页字母气泡 */
 .letter-grid { display: flex; flex-wrap: wrap; gap: 28px; justify-content: center; z-index: 2; }
-.letter-bubble { width: 120px; height: 120px; border-radius: 28px; border: none; cursor: pointer;
-  font-size: 60px; font-weight: 900; color: var(--ink);
-  box-shadow: 5px 6px 0 rgba(0,0,0,.18); animation: floaty 2.2s ease-in-out infinite; }
-@keyframes floaty { 0%,100% { transform: translateY(0) rotate(-3deg); }
-  50% { transform: translateY(-14px) rotate(3deg); } }
+.letter-bubble { width: 124px; height: 124px; border-radius: 28px; border: 5px solid #fff; cursor: pointer;
+  font-size: 62px; font-weight: 900; color: var(--ink);
+  box-shadow: 5px 6px 0 rgba(0,0,0,.18); animation: floaty 2.2s ease-in-out infinite;
+  transition: transform .15s ease; }
+.letter-bubble:hover { transform: scale(1.12) rotate(-4deg); }
+@keyframes floaty { 0%,100% { transform: translateY(0) rotate(-4deg); }
+  50% { transform: translateY(-16px) rotate(4deg); } }
 
-.hint { position: fixed; top: 24px; left: 24px; font-size: 20px; color: #888; z-index: 5; }
+/* 结束总结卡片 */
+.summary-card { z-index: 6; background: #fff; border-radius: 40px; padding: 44px 56px;
+  box-shadow: 10px 12px 0 rgba(0,0,0,.18); max-width: 86vw; border: 8px solid var(--yellow);
+  animation: card-in .6s cubic-bezier(.18,1.5,.4,1) both; }
+@keyframes card-in {
+  0% { transform: scale(.3) rotate(-8deg); opacity: 0; }
+  70% { transform: scale(1.08); }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.summary-emoji { font-size: 96px; animation: title-bounce 1.4s ease-in-out infinite; }
+.summary-title { font-size: 56px; font-weight: 900; margin: 6px 0 18px; color: var(--rose);
+  text-shadow: 4px 4px 0 var(--yellow); }
+.summary-body { font-size: 30px; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
+.summary-stat { color: var(--green); font-size: 40px; }
+.summary-words { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
+  margin-top: 18px; max-width: 70vw; }
+.summary-words .bub { font-size: 30px; padding: 12px 22px; }
+.summary-list { display: flex; flex-direction: column; gap: 12px;
+  margin-top: 18px; max-height: 50vh; overflow-y: auto; }
+.summary-entry { display: flex; align-items: center; justify-content: center;
+  gap: 14px; flex-wrap: wrap; }
+.summary-entry .bub { font-size: 26px; padding: 10px 18px; }
+.summary-list .summary-sentence { font-size: 26px; margin-top: 0; }
+.summary-sentence { font-size: 32px; margin-top: 14px; }
+.summary-sentence b { color: var(--rose); background: var(--yellow);
+  padding: 2px 10px; border-radius: 12px; }
+
+/* 撒花 */
+.confetti-bit { position: fixed; top: -30px; z-index: 30; border-radius: 4px;
+  animation-name: confetti-fall; animation-timing-function: linear; animation-fill-mode: forwards; }
+@keyframes confetti-fall {
+  0% { transform: translateY(-12vh) rotate(0deg); opacity: 1; }
+  100% { transform: translateY(115vh) rotate(760deg); opacity: 1; }
+}
+
+/* 返回按钮：糖果药丸 */
+.hint { position: fixed; top: 26px; left: 24px; z-index: 5; text-decoration: none;
+  font-size: 24px; font-weight: 900; color: var(--ink);
+  background: var(--yellow); padding: 12px 24px; border-radius: 999px;
+  border: 4px solid #fff; box-shadow: 4px 5px 0 rgba(0,0,0,.18);
+  transition: transform .15s ease; }
+.hint:hover { transform: translateY(-3px) scale(1.06) rotate(-2deg); }
+.hint:active { transform: translateY(2px) scale(.97); }
 .hidden { display: none !important; }

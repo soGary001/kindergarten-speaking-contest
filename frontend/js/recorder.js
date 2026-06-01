@@ -3,7 +3,7 @@
 //      await rec.start(); ... rec.stop();
 // "说完一句"（语音后静音约 800ms）会触发 onUtterance(wavBase64)。
 class Recorder {
-  constructor({ onUtterance, getLetter, silenceMs = 800, minSpeechMs = 250, threshold = 0.012 }) {
+  constructor({ onUtterance, getLetter, silenceMs = 700, minSpeechMs = 120, threshold = 0.012 }) {
     this.onUtterance = onUtterance;
     this.getLetter = getLetter || (() => null);
     this.silenceMs = silenceMs;

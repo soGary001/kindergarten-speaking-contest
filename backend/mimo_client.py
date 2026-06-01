@@ -3,16 +3,21 @@ import httpx
 from backend.config import API_KEY, BASE_URL, MODEL
 
 _SYSTEM = (
-    "You transcribe short English speech from young children at an English contest. "
-    "Output ONLY the English words you hear, in lowercase, no punctuation and no explanation."
+    "You are a precise speech-to-text engine for an English speaking activity with young children. "
+    "Transcribe ONLY the English words actually spoken in the audio, exactly as you hear them, "
+    "in lowercase and separated by single spaces. "
+    "Do not add, guess, or invent words. Do not explain. "
+    "If the audio is silent, just noise, or unclear, output nothing at all."
 )
 
 
 def _build_payload(audio_b64: str, letter: str | None) -> dict:
-    hint = "The child is saying English words"
+    hint = "Transcribe the English speech in this audio."
     if letter:
-        hint += f" starting with the letter '{letter}'"
-    hint += ", and may then say a short sentence. Transcribe everything spoken."
+        hint += (
+            f" (The speaker was asked to say words beginning with '{letter}', "
+            "but transcribe only what is actually said.)"
+        )
     return {
         "model": MODEL,
         "messages": [
@@ -26,6 +31,8 @@ def _build_payload(audio_b64: str, letter: str | None) -> dict:
             },
         ],
         "temperature": 0,
+        # omni 是推理模型，默认每次先"思考"约 9 秒；关闭后降到约 2 秒，且不再脑补。
+        "thinking": {"type": "disabled"},
     }
 
 

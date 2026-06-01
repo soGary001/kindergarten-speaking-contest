@@ -1,5 +1,6 @@
 import pytest
-from backend import mimo_client
+
+from backend import aliyun_client
 
 
 class _FakeResponse:
@@ -16,38 +17,33 @@ class _FakeResponse:
 
 
 @pytest.mark.asyncio
-async def test_transcribe_wav_returns_text(monkeypatch):
+async def test_transcribe_wav_returns_lowercase_text(monkeypatch):
     captured = {}
 
     async def fake_post(self, url, headers=None, json=None, timeout=None):
         captured["url"] = url
         captured["json"] = json
         captured["auth"] = headers["Authorization"]
-        return _FakeResponse(
-            200,
-            {"choices": [{"message": {"content": "  Cat "}}]},
-        )
+        return _FakeResponse(200, {"choices": [{"message": {"content": "Boy."}}]})
 
     monkeypatch.setattr("httpx.AsyncClient.post", fake_post)
 
-    text = await mimo_client.transcribe_wav("ZmFrZQ==", letter="C")
+    text = await aliyun_client.transcribe_wav("ZmFrZQ==", letter="B")
 
-    assert text == "cat"  # 去空格 + 小写
+    assert text == "boy."  # 去空格 + 小写（标点由前端按词清洗）
     assert captured["url"].endswith("/chat/completions")
     assert captured["auth"].startswith("Bearer ")
-    # 字母上下文应进入提示
     dumped = str(captured["json"])
-    assert "C" in dumped
+    assert "qwen3-asr-flash" in dumped
     assert "input_audio" in dumped
-    # 必须关闭推理，否则每次响应慢约 9 秒
-    assert captured["json"]["thinking"] == {"type": "disabled"}
+    assert "data:audio/wav;base64,ZmFrZQ==" in dumped
 
 
 @pytest.mark.asyncio
-async def test_transcribe_wav_empty_on_blank(monkeypatch):
+async def test_transcribe_wav_handles_list_content(monkeypatch):
     async def fake_post(self, url, headers=None, json=None, timeout=None):
-        return _FakeResponse(200, {"choices": [{"message": {"content": "   "}}]})
+        return _FakeResponse(200, {"choices": [{"message": {"content": [{"text": "Hello World"}]}}]})
 
     monkeypatch.setattr("httpx.AsyncClient.post", fake_post)
-    text = await mimo_client.transcribe_wav("ZmFrZQ==", letter=None)
-    assert text == ""
+    text = await aliyun_client.transcribe_wav("ZmFrZQ==")
+    assert text == "hello world"

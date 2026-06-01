@@ -8,3 +8,5 @@ dist/
 .venv/
 backend/config_local.py
 *.wav
+.claude/launch.json
+.DS_Store
