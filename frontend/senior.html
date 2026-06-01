@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>中班 Middle</title>
+  <link rel="stylesheet" href="/css/memphis.css" />
+</head>
+<body>
+  <a class="hint" href="/index.html">🏠 返回</a>
+
+  <!-- 选字母态 -->
+  <div id="pick" class="scene">
+    <h1 class="title" style="font-size:44px">点一个字母开始 ✨</h1>
+    <div id="grid" class="letter-grid"></div>
+  </div>
+
+  <!-- 进行中态 -->
+  <div id="play" class="hidden">
+    <div id="timer" class="timer">60</div>
+    <div id="letter" class="big-letter">S</div>
+    <div id="prompt" class="prompt">先说一个 S 开头的单词 🎤</div>
+    <div id="entries" class="entries"></div>
+  </div>
+
+  <!-- 结束总结 -->
+  <div id="summary" class="scene hidden">
+    <div class="summary-card">
+      <div class="summary-emoji">🎉</div>
+      <h1 class="summary-title">太棒啦！</h1>
+      <div id="summary-body" class="summary-body"></div>
+      <div class="btn-row">
+        <button class="big-btn btn-again" onclick="location.reload()">再玩一次 🔁</button>
+        <button class="big-btn btn-home" onclick="location.href='/index.html'">返回首页 🏠</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="/js/celebrate.js"></script>
+  <script src="/js/recorder.js"></script>
+  <script src="/js/speech.js"></script>
+  <script src="/js/senior.js"></script>
+</body>
+</html>
