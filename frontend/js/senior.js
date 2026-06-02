@@ -1,9 +1,10 @@
 const LETTERS = ["S", "D", "T", "F", "B", "G"];
-const COLORS = ["var(--pink)", "var(--yellow)", "var(--green)", "var(--blue)", "var(--rose)", "var(--purple)"];
 const DURATION = 60;
+const DRAW_SECONDS = 5;
 
 const pickEl = document.getElementById("pick");
-const gridEl = document.getElementById("grid");
+const drawLetterEl = document.getElementById("draw-letter");
+const drawCountEl = document.getElementById("draw-count");
 const playEl = document.getElementById("play");
 const letterEl = document.getElementById("letter");
 const promptEl = document.getElementById("prompt");
@@ -17,16 +18,27 @@ let timerId = null;
 const entries = [];   // [{ word, ok, sentenceRaw, sentence, el, sentenceEl }]
 let current = null;    // 正在补句子的那个单词
 
-// 渲染选字母网格
-LETTERS.forEach((l, i) => {
-  const b = document.createElement("button");
-  b.className = "letter-bubble";
-  b.textContent = l;
-  b.style.background = COLORS[i % COLORS.length];
-  b.style.animationDelay = `${i * 0.15}s`;
-  b.onclick = () => startPlay(l);
-  gridEl.appendChild(b);
-});
+// 进页面后倒数 5 秒，老虎机式滚动字母，到点随机定一个并自动开始。
+function startDraw() {
+  let n = DRAW_SECONDS;
+  drawCountEl.textContent = `${n} 秒后开始`;
+  const cycle = setInterval(() => {
+    drawLetterEl.textContent = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+  }, 90);
+  const tick = setInterval(() => {
+    n -= 1;
+    if (n > 0) {
+      drawCountEl.textContent = `${n} 秒后开始`;
+    } else {
+      clearInterval(tick);
+      clearInterval(cycle);
+      const letter = LETTERS[Math.floor(Math.random() * LETTERS.length)];
+      drawLetterEl.textContent = letter;
+      drawCountEl.textContent = "就是它！";
+      setTimeout(() => startPlay(letter), 800); // 让抽中的字母停留一下
+    }
+  }, 1000);
+}
 
 function tokenize(text) {
   return text.split(/\s+/).map((w) => w.replace(/[^a-zA-Z]/g, "")).filter(Boolean);
@@ -141,3 +153,5 @@ async function startPlay(letter) {
   }
   timerId = setInterval(tick, 1000);
 }
+
+startDraw();

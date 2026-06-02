@@ -118,10 +118,10 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
 #play { position: fixed; inset: 0; display: flex; flex-direction: column;
   align-items: center; padding: 14px 24px 22px; }
 #play .big-letter { font-size: 130px; }
-#play .prompt { margin-top: 0; }
+#play .prompt { margin-top: 6px; }
 
-/* 中班“单词 + 句子”条目列表（可滚动） */
-.entries { margin-top: 8px; width: min(94vw, 1120px); flex: 1 1 auto; min-height: 0;
+/* 中班“单词 + 句子”条目列表（可滚动）；与上方字母拉开距离 */
+.entries { margin-top: 52px; width: min(94vw, 1120px); flex: 1 1 auto; min-height: 0;
   overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
   align-items: center; padding: 6px 0; z-index: 3; }
 .entry { display: flex; align-items: center; justify-content: center;
