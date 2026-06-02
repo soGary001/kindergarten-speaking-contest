@@ -1,6 +1,11 @@
 // 撒花 + 背景漂浮装饰，给孩子更多“多巴胺”视觉反馈。
 const CELEBRATE_COLORS = ["#ff8fab", "#ffd23f", "#06d6a0", "#118ab2", "#ef476f", "#c9b8f0"];
 
+// 中英双语：中文为主，英文小一号在下方。
+function bi(cn, en) {
+  return cn + '<span class="en">' + en + "</span>";
+}
+
 // 满屏撒花。n = 纸屑数量。
 function launchConfetti(n = 90) {
   for (let i = 0; i < n; i++) {

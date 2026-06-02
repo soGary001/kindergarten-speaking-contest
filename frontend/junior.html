@@ -7,7 +7,7 @@
   <link rel="stylesheet" href="/css/memphis.css" />
 </head>
 <body>
-  <a class="hint" href="/index.html">🏠 返回</a>
+  <a class="hint" href="/index.html">🏠 返回 · Home</a>
 
   <div id="play">
     <div id="timer" class="timer">30</div>
@@ -15,7 +15,7 @@
       <div class="shape circle" style="top:10%;left:8%;width:70px;height:70px;background:var(--yellow)"></div>
       <div class="shape tri" style="bottom:30%;left:10%;border-left:30px solid transparent;border-right:30px solid transparent;border-bottom:50px solid var(--pink)"></div>
       <div id="letter" class="big-letter">C</div>
-      <div id="prompt" class="prompt">说出 C 开头的单词 🎤</div>
+      <div id="prompt" class="prompt"></div>
     </div>
     <div id="bubbles" class="bubbles"></div>
   </div>
@@ -24,11 +24,11 @@
   <div id="summary" class="scene hidden">
     <div class="summary-card">
       <div class="summary-emoji">🎉</div>
-      <h1 class="summary-title">你真棒！</h1>
+      <h1 class="summary-title">你真棒！<span class="en">Great job!</span></h1>
       <div id="summary-body" class="summary-body"></div>
       <div class="btn-row">
-        <button class="big-btn btn-again" onclick="location.reload()">再玩一次 🔁</button>
-        <button class="big-btn btn-home" onclick="location.href='/index.html'">返回首页 🏠</button>
+        <button class="big-btn btn-again" onclick="location.reload()">再玩一次<span class="en">Play again</span></button>
+        <button class="big-btn btn-home" onclick="location.href='/index.html'">返回首页<span class="en">Home</span></button>
       </div>
     </div>
   </div>

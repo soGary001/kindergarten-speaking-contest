@@ -7,20 +7,20 @@
   <link rel="stylesheet" href="/css/memphis.css" />
 </head>
 <body>
-  <a class="hint" href="/index.html">🏠 返回</a>
+  <a class="hint" href="/index.html">🏠 返回 · Home</a>
 
   <!-- 抽字母态：倒数 5 秒自动抽取 -->
   <div id="pick" class="scene">
-    <h1 class="title" style="font-size:44px">🎰 抽一个字母…</h1>
+    <h1 class="title" style="font-size:44px">🎰 抽一个字母<span class="en">Drawing a letter…</span></h1>
     <div id="draw-letter" class="big-letter">S</div>
-    <div id="draw-count" class="prompt">5 秒后开始</div>
+    <div id="draw-count" class="prompt"></div>
   </div>
 
   <!-- 进行中态 -->
   <div id="play" class="hidden">
     <div id="timer" class="timer">60</div>
     <div id="letter" class="big-letter">S</div>
-    <div id="prompt" class="prompt">先说一个 S 开头的单词 🎤</div>
+    <div id="prompt" class="prompt"></div>
     <div id="entries" class="entries"></div>
   </div>
 
@@ -28,11 +28,11 @@
   <div id="summary" class="scene hidden">
     <div class="summary-card">
       <div class="summary-emoji">🎉</div>
-      <h1 class="summary-title">太棒啦！</h1>
+      <h1 class="summary-title">太棒啦！<span class="en">Awesome!</span></h1>
       <div id="summary-body" class="summary-body"></div>
       <div class="btn-row">
-        <button class="big-btn btn-again" onclick="location.reload()">再玩一次 🔁</button>
-        <button class="big-btn btn-home" onclick="location.href='/index.html'">返回首页 🏠</button>
+        <button class="big-btn btn-again" onclick="location.reload()">再玩一次<span class="en">Play again</span></button>
+        <button class="big-btn btn-home" onclick="location.href='/index.html'">返回首页<span class="en">Home</span></button>
       </div>
     </div>
   </div>

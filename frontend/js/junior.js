@@ -15,7 +15,7 @@ const okWords = [];
 
 function render() {
   letterEl.textContent = currentLetter;
-  promptEl.textContent = `说出 ${currentLetter} 开头的单词 🎤`;
+  promptEl.innerHTML = bi(`说出 ${currentLetter} 开头的单词 🎤`, `Say words starting with ${currentLetter}`);
   timerEl.textContent = remaining;
 }
 
@@ -57,8 +57,9 @@ function showSummary() {
   document.getElementById("play").classList.add("hidden");
   const body = document.getElementById("summary-body");
   body.innerHTML =
-    `你一共说了 <span class="summary-stat">${allWords.length}</span> 个单词，<br>` +
-    `其中 ⭐ <span class="summary-stat">${okWords.length}</span> 个是 “${currentLetter}” 开头！`;
+    `你一共说了 <span class="summary-stat">${allWords.length}</span> 个单词，` +
+    `其中 ⭐ <span class="summary-stat">${okWords.length}</span> 个是 “${currentLetter}” 开头！` +
+    `<span class="en">You said ${allWords.length} words — ${okWords.length} start with “${currentLetter}”!</span>`;
   if (okWords.length) {
     const row = document.createElement("div");
     row.className = "summary-words";
@@ -80,7 +81,7 @@ async function main() {
   try {
     await engine.start();
   } catch (e) {
-    promptEl.textContent = "请允许使用麦克风后刷新页面 🎤";
+    promptEl.innerHTML = bi("请允许使用麦克风后刷新页面 🎤", "Please allow the microphone, then refresh");
     return;
   }
   timerId = setInterval(tick, 1000);
