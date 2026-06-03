@@ -90,9 +90,11 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
   50% { transform: scale(1.16); }
 }
 
-/* 气泡糖单词 */
-.bubbles { position: fixed; left: 24px; right: 24px; bottom: 40px;
-  display: flex; flex-wrap: wrap; gap: 18px; justify-content: center; z-index: 3; }
+/* 气泡糖单词：小班单词区（可换行、可滚动，容纳 ~21 个单词全显示） */
+.bubbles { margin-top: 26px; width: min(96vw, 1240px); flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; display: flex; flex-wrap: wrap; gap: 12px;
+  justify-content: center; align-content: flex-start; padding: 6px 0 10px; z-index: 3; }
+.bubbles .bub { font-size: 32px; padding: 10px 20px; }
 .bub { padding: 18px 32px; border-radius: 32px; font-size: 40px; font-weight: 900;
   color: var(--ink); background: #fff; box-shadow: 5px 6px 0 rgba(0,0,0,.18);
   animation: pop .55s cubic-bezier(.18,1.5,.4,1) both; }
@@ -118,20 +120,20 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
   50% { transform: scale(1.4) rotate(18deg); }
 }
 
-/* 中班进行中：从上往下的纵向布局，避免单词与句子重叠 */
+/* 进行中：从上往下的纵向布局（小班/中班共用），字母在上、内容区填满下方 */
 #play { position: fixed; inset: 0; display: flex; flex-direction: column;
   align-items: center; padding: 14px 24px 22px; }
-#play .big-letter { font-size: 130px; }
-#play .prompt { margin-top: 6px; }
+#play .big-letter { font-size: 116px; line-height: 1; }
+#play .prompt { margin-top: 4px; }
 
-/* 中班“单词 + 句子”条目列表（可滚动）；与上方字母拉开距离 */
-.entries { margin-top: 52px; width: min(94vw, 1120px); flex: 1 1 auto; min-height: 0;
-  overflow-y: auto; display: flex; flex-direction: column; gap: 16px;
+/* 中班“单词 + 句子”条目列表（可滚动）；缩小字号以容纳 7 词 + 7 句全显示 */
+.entries { margin-top: 24px; width: min(94vw, 1160px); flex: 1 1 auto; min-height: 0;
+  overflow-y: auto; display: flex; flex-direction: column; gap: 12px;
   align-items: center; padding: 6px 0; z-index: 3; }
 .entry { display: flex; align-items: center; justify-content: center;
-  gap: 18px; flex-wrap: wrap; width: 100%; }
-.entry .bub { font-size: 42px; }
-.entry-sentence { font-size: 40px; font-weight: 800; color: var(--ink); line-height: 1.25;
+  gap: 16px; flex-wrap: wrap; width: 100%; }
+.entry .bub { font-size: 32px; padding: 12px 22px; }
+.entry-sentence { font-size: 30px; font-weight: 800; color: var(--ink); line-height: 1.25;
   text-align: center; }
 .entry-sentence:empty { display: none; }
 .entry-sentence b { color: var(--rose); background: var(--yellow);
@@ -149,27 +151,28 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
   50% { transform: translateY(-16px) rotate(4deg); } }
 
 /* 结束总结卡片 */
-.summary-card { z-index: 6; background: #fff; border-radius: 40px; padding: 44px 56px;
-  box-shadow: 10px 12px 0 rgba(0,0,0,.18); max-width: 86vw; border: 8px solid var(--yellow);
+.summary-card { z-index: 6; background: #fff; border-radius: 40px; padding: 32px 48px;
+  box-shadow: 10px 12px 0 rgba(0,0,0,.18); max-width: 88vw; max-height: 90vh; overflow-y: auto;
+  border: 8px solid var(--yellow);
   animation: card-in .6s cubic-bezier(.18,1.5,.4,1) both; }
 @keyframes card-in {
   0% { transform: scale(.3) rotate(-8deg); opacity: 0; }
   70% { transform: scale(1.08); }
   100% { transform: scale(1) rotate(0); opacity: 1; }
 }
-.summary-emoji { font-size: 96px; animation: title-bounce 1.4s ease-in-out infinite; }
-.summary-title { font-size: 56px; font-weight: 900; margin: 6px 0 18px; color: var(--rose);
+.summary-emoji { font-size: 72px; animation: title-bounce 1.4s ease-in-out infinite; }
+.summary-title { font-size: 46px; font-weight: 900; margin: 4px 0 14px; color: var(--rose);
   text-shadow: 4px 4px 0 var(--yellow); }
-.summary-body { font-size: 30px; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
+.summary-body { font-size: 30px; font-weight: 800; color: var(--ink); margin-bottom: 20px; }
 .summary-stat { color: var(--green); font-size: 40px; }
 /* 总结里的鼓励语（预生成 TTS 配音 + 文字） */
 .encourage { margin: 20px auto 0; font-size: 28px; font-weight: 900; color: var(--blue);
   background: #fff; border: 3px dashed var(--green); border-radius: 20px; padding: 12px 24px;
   display: inline-block; animation: pop .5s cubic-bezier(.18,1.5,.4,1) both; }
 
-.summary-words { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
-  margin-top: 18px; max-width: 70vw; }
-.summary-words .bub { font-size: 30px; padding: 12px 22px; }
+.summary-words { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+  margin-top: 14px; max-width: 80vw; max-height: 34vh; overflow-y: auto; }
+.summary-words .bub { font-size: 24px; padding: 8px 16px; }
 .summary-list { display: flex; flex-direction: column; gap: 12px;
   margin-top: 18px; max-height: 50vh; overflow-y: auto; }
 .summary-entry { display: flex; align-items: center; justify-content: center;
