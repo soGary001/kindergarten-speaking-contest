@@ -1,0 +1,13 @@
+.venv/
+backend/
+tests/
+build/
+dist/
+dist-windows/
+dist-android/
+android/
+node_modules/
+scripts/
+docs/
+*.dmg
+*.apk
