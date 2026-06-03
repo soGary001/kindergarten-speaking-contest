@@ -181,21 +181,15 @@ function showSummary() {
   const body = document.getElementById("summary-body");
   if (entries.length) {
     // 只统计“对的”：单词首字母匹配；句子需“单词对 且 句子里含该单词”才算。
+    // 中班一轮可达 7 词 + 7 句，明细在比赛过程中已实时展示；总结页只留统计，
+    // 避免内容溢出把按钮挤出屏幕。
     const wordCount = entries.filter((e) => e.ok).length;
     const sentenceCount = entries.filter((e) => e.ok && e.sentenceValid).length;
-    let html = `字母 <span class="summary-stat">${currentLetter}</span>　` +
+    body.innerHTML =
+      `字母 <span class="summary-stat">${currentLetter}</span>　` +
       `单词 <span class="summary-stat">${wordCount}</span> 个 · ` +
       `句子 <span class="summary-stat">${sentenceCount}</span> 句` +
-      `<span class="en">Letter ${currentLetter} · ${wordCount} words · ${sentenceCount} sentences</span>` +
-      `<div class="summary-list">`;
-    entries.forEach((e) => {
-      const star = e.ok ? " ✓" : "";
-      html += `<div class="summary-entry"><div class="${e.ok ? "bub ok" : "bub"}">${e.word}${star}</div>`;
-      if (e.sentence) html += `<div class="summary-sentence">${e.sentence}</div>`;
-      html += `</div>`;
-    });
-    html += `</div>`;
-    body.innerHTML = html;
+      `<span class="en">Letter ${currentLetter} · ${wordCount} words · ${sentenceCount} sentences</span>`;
   } else {
     body.innerHTML = `你选了字母 <span class="summary-stat">${currentLetter}</span>，下次大声说出来吧！` +
       `<span class="en">You got letter ${currentLetter} — speak up next time!</span>`;
