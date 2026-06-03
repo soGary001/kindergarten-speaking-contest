@@ -200,6 +200,11 @@ function showSummary() {
     body.innerHTML = `你选了字母 <span class="summary-stat">${currentLetter}</span>，下次大声说出来吧！` +
       `<span class="en">You got letter ${currentLetter} — speak up next time!</span>`;
   }
+  const enc = playEncouragement(); // 随机播一句英文鼓励 + 显示
+  const encEl = document.createElement("div");
+  encEl.className = "encourage";
+  encEl.textContent = "🌟 " + enc.text;
+  body.appendChild(encEl);
   document.getElementById("summary").classList.remove("hidden");
   launchConfetti(110);
   setTimeout(() => { location.href = "/index.html"; }, 40000);
@@ -226,6 +231,7 @@ async function startPlay(letter) {
     promptEl.innerHTML = bi("请允许使用麦克风后刷新页面 🎤", "Please allow the microphone, then refresh");
     return;
   }
+  playCheer(); // 抽中的字母就绪，来点庆祝音效
   timerId = setInterval(tick, 1000);
 }
 

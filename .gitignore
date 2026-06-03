@@ -16,3 +16,4 @@ android/
 .gradle/
 *.apk
 dist-windows/
+.vercel

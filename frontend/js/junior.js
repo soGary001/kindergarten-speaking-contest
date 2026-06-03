@@ -66,6 +66,11 @@ function showSummary() {
     okWords.forEach((w) => row.appendChild(makeBubble(w, true)));
     body.appendChild(row);
   }
+  const enc = playEncouragement(); // 随机播一句英文鼓励 + 显示
+  const encEl = document.createElement("div");
+  encEl.className = "encourage";
+  encEl.textContent = "🌟 " + enc.text;
+  body.appendChild(encEl);
   document.getElementById("summary").classList.remove("hidden");
   launchConfetti(110);
   // 兜底：40 秒无人操作自动回首页。
@@ -84,6 +89,7 @@ async function main() {
     promptEl.innerHTML = bi("请允许使用麦克风后刷新页面 🎤", "Please allow the microphone, then refresh");
     return;
   }
+  playCheer(); // 字母已就绪，来点庆祝音效
   timerId = setInterval(tick, 1000);
 }
 

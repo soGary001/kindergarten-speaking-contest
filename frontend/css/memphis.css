@@ -162,6 +162,11 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
   text-shadow: 4px 4px 0 var(--yellow); }
 .summary-body { font-size: 30px; font-weight: 800; color: var(--ink); margin-bottom: 28px; }
 .summary-stat { color: var(--green); font-size: 40px; }
+/* 总结里的鼓励语（预生成 TTS 配音 + 文字） */
+.encourage { margin: 20px auto 0; font-size: 28px; font-weight: 900; color: var(--blue);
+  background: #fff; border: 3px dashed var(--green); border-radius: 20px; padding: 12px 24px;
+  display: inline-block; animation: pop .5s cubic-bezier(.18,1.5,.4,1) both; }
+
 .summary-words { display: flex; flex-wrap: wrap; gap: 14px; justify-content: center;
   margin-top: 18px; max-width: 70vw; }
 .summary-words .bub { font-size: 30px; padding: 12px 22px; }

@@ -6,6 +6,54 @@ function bi(cn, en) {
   return cn + '<span class="en">' + en + "</span>";
 }
 
+// 共享 AudioContext；浏览器自动播放限制下，首次手势/麦克风授权后解锁。
+let _actx = null;
+function unlockAudio() {
+  try {
+    if (!_actx) _actx = new (window.AudioContext || window.webkitAudioContext)();
+    if (_actx.state === "suspended") _actx.resume();
+  } catch (_) { /* 忽略 */ }
+  return _actx;
+}
+["pointerdown", "keydown", "touchstart"].forEach((ev) =>
+  document.addEventListener(ev, unlockAudio, { once: true, passive: true }));
+
+// 选中/抽中字母时的欢快音效（合成上行琶音 + 收尾，无需音频文件，四端离线可用）。
+function playCheer() {
+  const ctx = unlockAudio();
+  if (!ctx) return;
+  const t0 = ctx.currentTime;
+  [523.25, 659.25, 783.99, 1046.5].forEach((f, i) => { // C5 E5 G5 C6
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = "triangle";
+    o.frequency.value = f;
+    const t = t0 + i * 0.09;
+    g.gain.setValueAtTime(0, t);
+    g.gain.linearRampToValueAtTime(0.25, t + 0.02);
+    g.gain.exponentialRampToValueAtTime(0.001, t + 0.28);
+    o.connect(g);
+    g.connect(ctx.destination);
+    o.start(t);
+    o.stop(t + 0.3);
+  });
+}
+
+// 预生成的英文鼓励语（qwen-tts 配音 + 文字），总结时随机播一句。
+const ENCOURAGEMENTS = [
+  { audio: "/audio/enc1.m4a", text: "Great job! Keep going!" },
+  { audio: "/audio/enc2.m4a", text: "Amazing! You are a speaking star!" },
+  { audio: "/audio/enc3.m4a", text: "Well done! Even better next time!" },
+  { audio: "/audio/enc4.m4a", text: "Awesome! A big thumbs up for you!" },
+  { audio: "/audio/enc5.m4a", text: "Excellent! We are so proud of you!" },
+  { audio: "/audio/enc6.m4a", text: "Fantastic! Your English is getting better!" },
+];
+function playEncouragement() {
+  const e = ENCOURAGEMENTS[Math.floor(Math.random() * ENCOURAGEMENTS.length)];
+  try { new Audio(e.audio).play().catch(() => {}); } catch (_) { /* 忽略 */ }
+  return e;
+}
+
 // 满屏撒花。n = 纸屑数量。
 function launchConfetti(n = 90) {
   for (let i = 0; i < n; i++) {
