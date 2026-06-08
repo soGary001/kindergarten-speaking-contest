@@ -179,6 +179,9 @@ function showSummary() {
   playEl.classList.add("hidden");
   pickEl.classList.add("hidden");
   const body = document.getElementById("summary-body");
+  // 大班：组数>2 → (组数-2)×0.5；组数≤2 → 0 分。组数 = “单词+句子”条目数。
+  const groups = entries.length;
+  const score = groups > 2 ? (groups - 2) * 0.5 : 0;
   if (entries.length) {
     // 只统计“对的”：单词首字母匹配；句子需“单词对 且 句子里含该单词”才算。
     // 中班一轮可达 7 词 + 7 句，明细在比赛过程中已实时展示；总结页只留统计，
@@ -186,12 +189,14 @@ function showSummary() {
     const wordCount = entries.filter((e) => e.ok).length;
     const sentenceCount = entries.filter((e) => e.ok && e.sentenceValid).length;
     body.innerHTML =
+      scoreBadge(score) +
       `字母 <span class="summary-stat">${currentLetter}</span>　` +
       `单词 <span class="summary-stat">${wordCount}</span> 个 · ` +
       `句子 <span class="summary-stat">${sentenceCount}</span> 句` +
       `<span class="en">Letter ${currentLetter} · ${wordCount} words · ${sentenceCount} sentences</span>`;
   } else {
-    body.innerHTML = `你选了字母 <span class="summary-stat">${currentLetter}</span>，下次大声说出来吧！` +
+    body.innerHTML = scoreBadge(0) +
+      `你选了字母 <span class="summary-stat">${currentLetter}</span>，下次大声说出来吧！` +
       `<span class="en">You got letter ${currentLetter} — speak up next time!</span>`;
   }
   const enc = playEncouragement(); // 随机播一句英文鼓励 + 显示

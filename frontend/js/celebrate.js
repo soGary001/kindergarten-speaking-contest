@@ -6,6 +6,14 @@ function bi(cn, en) {
   return cn + '<span class="en">' + en + "</span>";
 }
 
+// 可爱的金色奖牌分数徽章（保留一位小数）。
+function scoreBadge(value) {
+  const v = (Math.round(value * 10) / 10).toFixed(1);
+  return '<div class="score-badge"><div class="score-trophy">🏆</div>' +
+    '<div class="score-num">' + v + '</div>' +
+    '<div class="score-label">得分 Score</div></div>';
+}
+
 // 共享 AudioContext；浏览器自动播放限制下，首次手势/麦克风授权后解锁。
 let _actx = null;
 function unlockAudio() {

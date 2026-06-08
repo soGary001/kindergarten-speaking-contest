@@ -56,7 +56,9 @@ function finish() {
 function showSummary() {
   document.getElementById("play").classList.add("hidden");
   const body = document.getElementById("summary-body");
+  const score = allWords.length * 0.1; // 小班：单词数量 × 0.1
   body.innerHTML =
+    scoreBadge(score) +
     `你一共说了 <span class="summary-stat">${allWords.length}</span> 个单词，` +
     `其中 ⭐ <span class="summary-stat">${okWords.length}</span> 个是 “${currentLetter}” 开头！` +
     `<span class="en">You said ${allWords.length} words — ${okWords.length} start with “${currentLetter}”!</span>`;
