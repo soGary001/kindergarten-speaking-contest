@@ -179,9 +179,10 @@ function showSummary() {
   playEl.classList.add("hidden");
   pickEl.classList.add("hidden");
   const body = document.getElementById("summary-body");
-  // 大班：组数>2 → (组数-2)×0.5；组数≤2 → 0 分。组数 = “单词+句子”条目数。
-  const groups = entries.length;
-  const score = groups > 2 ? (groups - 2) * 0.5 : 0;
+  // 大班：正确句子>2 → (正确句子-2)×0.5；正确句子≤2 → 0 分。
+  // 正确句子 = 单词首字母对 且 句子里含该单词（含时态/词形变化）。
+  const validSentences = entries.filter((e) => e.ok && e.sentenceValid).length;
+  const score = validSentences > 2 ? (validSentences - 2) * 0.5 : 0;
   if (entries.length) {
     // 只统计“对的”：单词首字母匹配；句子需“单词对 且 句子里含该单词”才算。
     // 中班一轮可达 7 词 + 7 句，明细在比赛过程中已实时展示；总结页只留统计，
