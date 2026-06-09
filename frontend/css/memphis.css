@@ -126,6 +126,22 @@ h1.title { font-size: 64px; font-weight: 900; z-index: 2;
 #play .big-letter { font-size: 116px; line-height: 1; }
 #play .prompt { margin-top: 4px; }
 
+/* 点击说话按钮（可爱糖果药丸；录音中变红脉动，识别中变紫） */
+.talk-btn { margin: 16px auto 2px; border: 5px solid #fff; cursor: pointer; font-family: inherit;
+  font-size: 34px; font-weight: 900; color: var(--ink); background: var(--green);
+  padding: 18px 46px; border-radius: 999px; box-shadow: 6px 7px 0 rgba(0,0,0,.18);
+  transition: transform .12s ease; z-index: 4; }
+.talk-btn .en { font-size: 0.5em; }
+.talk-btn:hover { transform: translateY(-3px) scale(1.04) rotate(-1deg); }
+.talk-btn:active { transform: translateY(3px) scale(.97); }
+.talk-btn.recording { background: var(--rose); color: #fff;
+  animation: talk-pulse .75s ease-in-out infinite; }
+.talk-btn.busy { background: var(--purple); color: var(--ink); cursor: default; }
+@keyframes talk-pulse {
+  0%,100% { transform: scale(1); box-shadow: 6px 7px 0 rgba(0,0,0,.18), 0 0 0 0 rgba(239,71,111,.5); }
+  50% { transform: scale(1.07); box-shadow: 6px 7px 0 rgba(0,0,0,.18), 0 0 0 18px rgba(239,71,111,0); }
+}
+
 /* 中班“单词 + 句子”条目列表（可滚动）；缩小字号以容纳 7 词 + 7 句全显示 */
 .entries { margin-top: 24px; width: min(94vw, 1160px); flex: 1 1 auto; min-height: 0;
   overflow-y: auto; display: flex; flex-direction: column; gap: 12px;

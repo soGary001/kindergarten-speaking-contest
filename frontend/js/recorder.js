@@ -1,11 +1,13 @@
-// 录音 + 静音检测(VAD) + WAV(16kHz 单声道) 编码。
-// 用法：const rec = new Recorder({ onUtterance, getLetter });
-//      await rec.start(); ... rec.stop();
-// "说完一句"（语音后静音约 800ms）会触发 onUtterance(wavBase64)。
+// 录音 + WAV(16kHz 单声道) 编码。
+//  - 手动模式 manual:true —— beginRecording()/endRecording() 之间整段录音
+//    （点击说话、再次点击结束，避免静音截断）。
+//  - VAD 模式（默认）—— 语音后静音约 0.7s 触发 onUtterance（保留备用）。
 class Recorder {
-  constructor({ onUtterance, getLetter, silenceMs = 700, minSpeechMs = 120, threshold = 0.012 }) {
-    this.onUtterance = onUtterance;
+  constructor({ onUtterance, getLetter, manual = false, silenceMs = 700, minSpeechMs = 120, threshold = 0.012 }) {
+    this.onUtterance = onUtterance || (() => {});
     this.getLetter = getLetter || (() => null);
+    this.manual = manual;
+    this.capturing = false;
     this.silenceMs = silenceMs;
     this.minSpeechMs = minSpeechMs;
     this.threshold = threshold;
@@ -41,7 +43,26 @@ class Recorder {
     return Math.sqrt(sum / buf.length);
   }
 
+  beginRecording() {
+    this.frames = [];
+    this.capturing = true;
+    if (this.ctx && this.ctx.state === "suspended") this.ctx.resume();
+  }
+
+  // 结束并返回整段录音的 wav base64（无声返回 null）。
+  endRecording() {
+    this.capturing = false;
+    const frames = this.frames;
+    this.frames = [];
+    if (!frames.length) return null;
+    return this._encodeWav(frames);
+  }
+
   _onAudio(buf) {
+    if (this.manual) {
+      if (this.capturing) this.frames.push(new Float32Array(buf));
+      return;
+    }
     const now = performance.now();
     const loud = this._rms(buf) > this.threshold;
     if (loud) {

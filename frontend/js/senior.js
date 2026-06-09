@@ -10,6 +10,31 @@ const letterEl = document.getElementById("letter");
 const promptEl = document.getElementById("prompt");
 const timerEl = document.getElementById("timer");
 const entriesEl = document.getElementById("entries");
+const talkBtn = document.getElementById("talk");
+let recording = false;
+
+function setTalkState(s) {
+  talkBtn.classList.remove("recording", "busy");
+  if (s === "recording") talkBtn.innerHTML = bi("🛑 说完啦，点我", "Tap when done"), talkBtn.classList.add("recording");
+  else if (s === "busy") talkBtn.innerHTML = bi("✨ 识别中…", "Listening…"), talkBtn.classList.add("busy");
+  else talkBtn.innerHTML = bi("🎤 点我说话", "Tap to talk");
+}
+
+async function onTalk() {
+  if (!engine) return;
+  if (!recording) {
+    recording = true;
+    engine.beginRecording();
+    setTalkState("recording");
+  } else {
+    recording = false;
+    setTalkState("busy");
+    talkBtn.disabled = true;
+    await engine.stopAndTranscribe();
+    talkBtn.disabled = false;
+    setTalkState("idle");
+  }
+}
 
 let currentLetter = null;
 let remaining = DURATION;
@@ -232,6 +257,8 @@ async function startPlay(letter) {
     return;
   }
   playCheer(); // 抽中的字母就绪，来点庆祝音效
+  setTalkState("idle");
+  talkBtn.onclick = onTalk;
   timerId = setInterval(tick, 1000);
 }
 

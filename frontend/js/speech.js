@@ -10,11 +10,20 @@ class SpeechEngine {
   }
 
   async start() {
-    this.recorder = new Recorder({
-      onUtterance: (b64, letter) => this._transcribe(b64, letter),
-      getLetter: this.getLetter,
-    });
+    // 手动模式：点击开始录音、再次点击结束并识别整段（避免停顿截断）。
+    this.recorder = new Recorder({ manual: true, getLetter: this.getLetter });
     await this.recorder.start(); // 麦克风被拒会在此 throw，由页面捕获提示
+  }
+
+  beginRecording() {
+    if (this.recorder) this.recorder.beginRecording();
+  }
+
+  // 结束录音并识别整段；有结果则回调 onText。
+  async stopAndTranscribe() {
+    if (!this.recorder) return;
+    const b64 = this.recorder.endRecording();
+    if (b64) await this._transcribe(b64, this.getLetter());
   }
 
   async _transcribe(b64, letter) {
