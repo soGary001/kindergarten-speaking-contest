@@ -56,7 +56,7 @@ function finish() {
 function showSummary() {
   document.getElementById("play").classList.add("hidden");
   const body = document.getElementById("summary-body");
-  const score = allWords.length * 0.1; // 小班：单词数量 × 0.1
+  const score = okWords.length * 0.1; // 小班：只算说对的单词（首字母匹配）× 0.1
   body.innerHTML =
     scoreBadge(score) +
     `你一共说了 <span class="summary-stat">${allWords.length}</span> 个单词，` +
