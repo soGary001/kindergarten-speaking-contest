@@ -173,18 +173,15 @@ function appendSentence(entry, text) {
 }
 
 function handleText(text) {
+  // 一次录音 = 一个单词 + 一句话：第一个词作为“单词”，整段作为句子并高亮该词。
   const words = tokenize(text);
   if (words.length === 0) return;
-  if (words.length === 1) {
-    // 单个词 → 一个新的“单词”，先单独显示。
-    current = addWordEntry(words[0]);
-    promptEl.innerHTML = bi(`👏 再用「${current.word}」说一句话 🗣️`, `Now make a sentence with “${current.word}”`);
-  } else {
-    // 多个词 → 当前单词的句子（若还没单词，用首词补一个）。
-    if (!current) current = addWordEntry(words[0]);
-    appendSentence(current, text);
-    promptEl.innerHTML = bi(`太棒了！还可以再说一个 ${currentLetter} 开头的单词 ✨`, `Great! Try another word starting with ${currentLetter}`);
-  }
+  const entry = addWordEntry(words[0]);
+  if (words.length > 1) appendSentence(entry, text);
+  promptEl.innerHTML = bi(
+    `太棒了！可以再说一个 ${currentLetter} 开头的单词 + 一句话 ✨`,
+    "Great! Next: another word + a sentence",
+  );
 }
 
 function tick() {
@@ -243,7 +240,7 @@ async function startPlay(letter) {
   pickEl.classList.add("hidden");
   playEl.classList.remove("hidden");
   letterEl.textContent = letter;
-  promptEl.innerHTML = bi(`先说一个 ${letter} 开头的单词 🎤`, `First, say a word starting with ${letter}`);
+  promptEl.innerHTML = bi(`说一个 ${letter} 开头的单词，再用它说一句话 🎤`, `Say a word starting with ${letter}, then a sentence`);
   timerEl.textContent = remaining;
 
   engine = new SpeechEngine({
