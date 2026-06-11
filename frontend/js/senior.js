@@ -12,6 +12,7 @@ const timerEl = document.getElementById("timer");
 const entriesEl = document.getElementById("entries");
 const talkBtn = document.getElementById("talk");
 let recording = false;
+let paused = false; // AI 识别期间暂停倒计时
 
 function setTalkState(s) {
   talkBtn.classList.remove("recording", "busy");
@@ -30,7 +31,9 @@ async function onTalk() {
     recording = false;
     setTalkState("busy");
     talkBtn.disabled = true;
+    paused = true; // 识别期间不计时
     await engine.stopAndTranscribe();
+    paused = false;
     talkBtn.disabled = false;
     setTalkState("idle");
   }
@@ -172,12 +175,24 @@ function appendSentence(entry, text) {
   entriesEl.scrollTop = entriesEl.scrollHeight;
 }
 
+// 把一次录音拆成「单词」(开头第一个词) 和「句子」(其余部分)。
+// 判断句子是否用到该词时，必须排除开头那个单独念的单词，否则句子永远命中。
+function splitWordAndSentence(text) {
+  const t = text.trim();
+  const word = (t.match(/[a-zA-Z]+/) || [""])[0];
+  if (!word) return { word: "", sentence: "" };
+  const lead = t.match(/^[^a-zA-Z]*[a-zA-Z]+[^a-zA-Z]*/); // 开头标点 + 第一个词 + 紧随标点/空格
+  const sentence = lead ? t.slice(lead[0].length).trim() : "";
+  return { word, sentence };
+}
+
 function handleText(text) {
-  // 一次录音 = 一个单词 + 一句话：第一个词作为“单词”，整段作为句子并高亮该词。
-  const words = tokenize(text);
-  if (words.length === 0) return;
-  const entry = addWordEntry(words[0]);
-  if (words.length > 1) appendSentence(entry, text);
+  // 一次录音 = 一个单词 + 一句话。开头第一个词为「单词」，其余为「句子」；
+  // 句子需在去掉开头单词后仍真正含该词（含时态变化）才算正确。
+  const { word, sentence } = splitWordAndSentence(text);
+  if (!word) return;
+  const entry = addWordEntry(word);
+  if (sentence) appendSentence(entry, sentence);
   promptEl.innerHTML = bi(
     `太棒了！可以再说一个 ${currentLetter} 开头的单词 + 一句话 ✨`,
     "Great! Next: another word + a sentence",
@@ -185,6 +200,7 @@ function handleText(text) {
 }
 
 function tick() {
+  if (paused) return; // AI 识别中，不计时
   remaining -= 1;
   timerEl.textContent = remaining;
   if (remaining <= 5) timerEl.classList.add("warn");

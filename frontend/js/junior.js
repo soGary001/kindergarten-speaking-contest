@@ -7,6 +7,7 @@ const timerEl = document.getElementById("timer");
 const bubblesEl = document.getElementById("bubbles");
 const talkBtn = document.getElementById("talk");
 let recording = false;
+let paused = false; // AI 识别期间暂停倒计时
 
 function setTalkState(s) {
   talkBtn.classList.remove("recording", "busy");
@@ -25,7 +26,9 @@ async function onTalk() {
     recording = false;
     setTalkState("busy");
     talkBtn.disabled = true;
+    paused = true; // 识别期间不计时
     await engine.stopAndTranscribe();
+    paused = false;
     talkBtn.disabled = false;
     setTalkState("idle");
   }
@@ -66,6 +69,7 @@ function addWords(text, letter) {
 
 
 function tick() {
+  if (paused) return; // AI 识别中，不计时
   remaining -= 1;
   timerEl.textContent = remaining;
   if (remaining <= 5) timerEl.classList.add("warn");
