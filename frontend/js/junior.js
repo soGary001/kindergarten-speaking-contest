@@ -76,8 +76,15 @@ function tick() {
   if (remaining <= 0) finish();
 }
 
-function finish() {
+async function finish() {
   clearInterval(timerId);
+  if (recording) {
+    // 时间到时还在录音 → 先把这段识别出来、判断显示，再结束。
+    recording = false;
+    setTalkState("busy");
+    talkBtn.disabled = true;
+    await engine.stopAndTranscribe();
+  }
   if (engine) engine.stop();
   showSummary();
 }
