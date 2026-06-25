@@ -3,10 +3,12 @@
   "regions": ["hkg1"],
   "builds": [
     { "src": "api/transcribe.py", "use": "@vercel/python" },
+    { "src": "api/segment.py", "use": "@vercel/python" },
     { "src": "frontend/**", "use": "@vercel/static" }
   ],
   "routes": [
     { "src": "/api/transcribe", "dest": "/api/transcribe.py" },
+    { "src": "/api/segment", "dest": "/api/segment.py" },
     { "src": "/", "dest": "/frontend/index.html" },
     { "src": "/(.+)", "dest": "/frontend/$1" }
   ]

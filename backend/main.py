@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from backend.aliyun_client import transcribe_wav
+from backend.aliyun_client import segment_words, transcribe_wav
 
 logger = logging.getLogger("contest")
 
@@ -39,6 +39,21 @@ async def transcribe(req: TranscribeRequest) -> dict:
         logger.exception("transcribe failed")
         return {"text": ""}
     return {"text": text}
+
+
+class SegmentRequest(BaseModel):
+    text: str
+
+
+@app.post("/api/segment")
+async def segment(req: SegmentRequest) -> dict:
+    # 把黏连英文长串切分成单词；失败则原样返回，不阻塞前端。
+    try:
+        text = await segment_words(req.text)
+    except Exception:
+        logger.exception("segment failed")
+        return {"text": req.text}
+    return {"text": text or req.text}
 
 
 if hasattr(sys, "_MEIPASS"):

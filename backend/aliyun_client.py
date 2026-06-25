@@ -33,3 +33,34 @@ async def transcribe_wav(audio_b64: str, letter: str | None = None) -> str:
     if isinstance(content, list):  # 兼容个别返回为分段数组的情况
         content = " ".join(part.get("text", "") for part in content if isinstance(part, dict))
     return content.strip().lower()
+
+
+_SEGMENT_MODEL = "qwen-flash"
+_SEGMENT_SYS = (
+    "You split run-together English into separate words. "
+    "Output ONLY the words in lowercase separated by single spaces, nothing else."
+)
+
+
+async def segment_words(text: str) -> str:
+    """把黏连成一串的英文(无空格) 用 LLM 切分成空格分隔的单词。"""
+    payload = {
+        "model": _SEGMENT_MODEL,
+        "messages": [
+            {"role": "system", "content": _SEGMENT_SYS},
+            {"role": "user", "content": text},
+        ],
+        "temperature": 0,
+    }
+    async with httpx.AsyncClient(timeout=30) as client:
+        resp = await client.post(
+            f"{ALIYUN_BASE_URL}/chat/completions",
+            headers={"Authorization": f"Bearer {ALIYUN_API_KEY}"},
+            json=payload,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+    content = data["choices"][0]["message"]["content"]
+    if isinstance(content, list):
+        content = " ".join(part.get("text", "") for part in content if isinstance(part, dict))
+    return content.strip().lower()
